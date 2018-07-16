@@ -1,3 +1,7 @@
+/* 这个就是ld.so对应源码
+ * rdld: run time dynamic linker
+ */
+
 /* Run time dynamic linker.
    Copyright (C) 1995-2018 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
@@ -411,7 +415,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
-  start_addr = _dl_sysdep_start (arg, &dl_main);
+  start_addr = _dl_sysdep_start (arg, &dl_main);//lux get start_address
 
 #ifndef HP_TIMING_NONAVAIL
   hp_timing_t rtld_total_time;
@@ -438,7 +442,9 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 
   return start_addr;
 }
-
+/*lux dl_start 入口
+ *
+ */
 static ElfW(Addr) __attribute_used__
 _dl_start (void *arg)
 {
@@ -520,7 +526,7 @@ _dl_start (void *arg)
 #ifdef DONT_USE_BOOTSTRAP_MAP
     ElfW(Addr) entry = _dl_start_final (arg);
 #else
-    ElfW(Addr) entry = _dl_start_final (arg, &info);
+    ElfW(Addr) entry = _dl_start_final (arg, &info);//lux start entry
 #endif
 
 #ifndef ELF_MACHINE_START_ADDRESS
@@ -861,7 +867,7 @@ handle_ld_preload (const char *preloadlist, struct link_map *main_map)
     }
   return npreloads;
 }
-
+//lux dl_main 核心逻辑
 static void
 dl_main (const ElfW(Phdr) *phdr,
 	 ElfW(Word) phnum,
@@ -982,7 +988,7 @@ dl_main (const ElfW(Phdr) *phdr,
 
       /* If we have no further argument the program was called incorrectly.
 	 Grant the user some education.  */
-      if (_dl_argc < 2)
+      if (_dl_argc < 2)//lux 参数不对
 	_dl_fatal_printf ("\
 Usage: ld.so [OPTION]... EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
 You have invoked `ld.so', the helper program for shared library executables.\n\
